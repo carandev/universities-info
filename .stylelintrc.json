@@ -1,0 +1,9 @@
+{
+    "extends": ["stylelint-config-standard", "stylelint-config-clean-order"],
+    "plugins": [
+        "stylelint-group-selectors"
+    ],
+    "rules": {
+      "plugin/stylelint-group-selectors": true
+    }
+  }
