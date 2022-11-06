@@ -1,9 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
 
-from config.db import conn
-from models.university import universities
-
 UIS_URL = "https://uis.edu.co/uis-programas-pregrado-es/"
 
 request = requests.get(UIS_URL)
