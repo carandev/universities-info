@@ -8,8 +8,14 @@ request = requests.get(UIS_URL)
 soup = BeautifulSoup(request.content, 'html.parser')
 h4_tags = soup.find_all('h4')
 
-for tag in h4_tags:
-    carer_name = tag.get_text()
-    carer_url = tag.find('a')['href']
+careers = []
 
-    carer = {'name': carer_name, 'url': carer_url}
+for tag in h4_tags:
+    career_name = tag.get_text()
+    career_url = tag.find('a')['href']
+
+    career = {'name': career_name, 'url': career_url}
+    careers.append(career)
+
+for career in careers:
+    print(career)
