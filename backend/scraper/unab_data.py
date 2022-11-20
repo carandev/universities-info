@@ -1,21 +1,21 @@
 import requests
 from bs4 import BeautifulSoup
 
-UIS_URL = "https://uis.edu.co/uis-programas-pregrado-es/"
+UNAB_URL = "https://unab.edu.co/pregrados/"
 
-request = requests.get(UIS_URL)
+request = requests.get(UNAB_URL)
 
 soup = BeautifulSoup(request.content, 'html.parser')
-h4_tags = soup.find_all('h4')
+h2_tags = soup.find_all('h2')
 
 careers = []
 
-for tag in h4_tags:
-    career_name = tag.get_text()
+for tag in h2_tags[:-13]:
+    career_name = tag.get_text().strip()
     career_url = tag.find('a')['href']
 
     career = {'name': career_name, 'url': career_url}
     careers.append(career)
 
 for career in careers:
-    print(career)
+    print(career) 
