@@ -1,23 +1,31 @@
 import requests
 from bs4 import BeautifulSoup
+from models.career import Career
 
-UPB_URL = "https://www.upb.edu.co/es/pregrados"
+from models.university import University
 
-request = requests.get(UPB_URL)
+UPB_URL = "https://www.upb.edu.co/es"
+CAREERS_UPB_URL = f"{UPB_URL}/pregrados"
 
-soup = BeautifulSoup(request.content, 'html.parser')
-div_tags = soup.find_all('li',{'class':'collapsed'})
-careers = []
 
-for tag in div_tags:
-    career_name = tag.get_text().strip()
-    career_url = tag.find('a')['href']
+def get_UPB_data():
+    request = requests.get(CAREERS_UPB_URL)
 
-    career = {'name': career_name, 'url': career_url}
-    careers.append({
-        'name': career_name,
-        'url': f'{UPB_URL}{career_url}'
-    })
+    soup = BeautifulSoup(request.content, 'html.parser')
+    div_tags = soup.find_all('li', {'class': 'collapsed'})
+    careers = []
 
-for career in careers:
-    print(career)
+    for tag in div_tags:
+        career_name = tag.find("div", {"class": "texto"}).get_text()
+        career_url = tag.find('a')['href']
+
+        careers.append(Career(
+            name=career_name,
+            page_url=f'{CAREERS_UPB_URL}{career_url}'
+        ))
+
+    return University(
+        name="Universidad Pontificia Bolivariana",
+        page_url=UPB_URL,
+        careers=careers
+    )
