@@ -1,21 +1,30 @@
 import requests
 from bs4 import BeautifulSoup
+from models.career import Career
 
-UNAB_URL = "https://unab.edu.co/pregrados/"
+from models.university import University
 
-request = requests.get(UNAB_URL)
+UNAB_URL = "https://unab.edu.co"
+CAREERS_UNAB_URL = f"{UNAB_URL}/pregrados/"
 
-soup = BeautifulSoup(request.content, 'html.parser')
-h2_tags = soup.find_all('h2')
 
-careers = []
+def get_UNAB_data():
+    request = requests.get(CAREERS_UNAB_URL)
 
-for tag in h2_tags[:-13]:
-    career_name = tag.get_text().strip()
-    career_url = tag.find('a')['href']
+    soup = BeautifulSoup(request.content, 'html.parser')
+    h2_tags = soup.find_all('h2')
 
-    career = {'name': career_name, 'url': career_url}
-    careers.append(career)
+    careers = []
 
-for career in careers:
-    print(career) 
+    for tag in h2_tags[:-13]:
+        career_name = tag.get_text().strip()
+        career_url = tag.find('a')['href']
+
+        career = Career(name=career_name, page_url=career_url)
+        careers.append(career)
+
+    return University(
+        name="Universidad Autónoma de Bucaramanga",
+        page_url=UNAB_URL,
+        careers=careers
+    )
