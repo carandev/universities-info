@@ -1,10 +1,13 @@
 from fastapi import APIRouter
 from sqlalchemy import select
 from models.career import Career
+from models.subject import Subject
 from scraper.main import careers_to_db
 from models.university import University
 from sqlalchemy.orm import Session
 from config.database import db_engine
+
+from scraper.udes_data import get_UDES_data
 university = APIRouter()
 
 
@@ -20,6 +23,12 @@ def update_universities():
     return "OK"
 
 
+@university.get("/universities/test")
+def test():
+    get_UDES_data()
+    return 'ok'
+
+
 @university.get("/universities/{university_id}")
 def get_university(university_id: int):
     with Session(db_engine) as session:
@@ -27,6 +36,6 @@ def get_university(university_id: int):
 
 
 @university.get("/universities/{university_id}/careers")
-def get_career(university_id: int):
+def get_university_careers(university_id: int):
     with Session(db_engine) as session:
         return session.execute(select(Career).where(Career.university_id == university_id)).fetchall()
