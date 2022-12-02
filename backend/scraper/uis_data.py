@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 from models.career import Career
+from models.subject import Subject
 
 from models.university import University
 
@@ -10,7 +11,6 @@ CAREERS_UIS_URL = f"{UIS_URL}/uis-programas-pregrado-es/"
 
 
 def get_UIS_data():
-    get_subjects('https://uis.edu.co/fc-pre-biologia-es/')
     request = requests.get(CAREERS_UIS_URL)
 
     soup = BeautifulSoup(request.content, 'html.parser')
@@ -22,9 +22,10 @@ def get_UIS_data():
         career_name = tag.get_text()
         career_url = tag.find('a')['href']
 
-        # get_subjects(career_url)
+        subjects = get_subjects(career_url)
 
-        career = Career(name=career_name, page_url=career_url)
+        career = Career(name=career_name, page_url=career_url,
+                        subjects=subjects)
         careers.append(career)
 
     return University(
@@ -49,14 +50,29 @@ def get_subjects(url):
     subject_name = ''
     semester = 0
 
+    subjects_list = []
+
     for i in range(1, len(semester_container) - 1):
         subjects = semester_container[i].find_all('p')
-        print(f'--- semester {i} ---')
         for subject in subjects:
-            print(subject.get_text().split('-')[-1].replace('\xa0', ''))
+            subject_name = subject.get_text().split(
+                '-')[-1].replace('\xa0', '')
+            semester = i
+
+            subjects_list.append(Subject(
+                name=subject_name,
+                semester=semester
+            ))
 
     subjects = semester_container[-1].find_all('p')
 
-    print(f'--- semester {semester} ---')
     for subject in subjects:
-        print(subject.get_text().split('-')[-1].replace('\xa0', ''))
+        subject_name = subject.get_text().split(
+            '-')[-1].replace('\xa0', '')
+
+        subjects_list.append(Subject(
+            name=subject_name,
+            semester=0
+        ))
+
+    return subjects_list
