@@ -1,31 +1,35 @@
 import React, { useEffect, useState } from 'react'
 
-import Header from '../components/Header.jsx'
-import Footer from '../components/Footer.jsx'
+import { Header, Footer } from '../components'
 
 const Home = () => {
-  const [greet, setGreet] = useState({})
-  const [query, setQuery] = useState({})
+  const [universities, setUniversities] = useState([])
 
   const fetchQuery = async () => {
-    const response = await fetch('http://localhost:8000/items/2?q=de locos')
+    const response = await fetch('http://localhost:8000/universities/')
     const json = await response.json()
 
-    setQuery(json)
+    setUniversities(json)
   }
 
   useEffect(() => {
-    fetch('http://localhost:8000')
-      .then(response => response.json())
-      .then(json => setGreet(json))
+    fetchQuery()
   }, [])
 
   return (
     <>
       <Header/>
-      <main>
-        <h2>Hi, {greet.Hello} -- Query: {query.q}</h2>
-        <button onClick={fetchQuery}>Send Request</button>
+      <main className='flex gap-4 flex-wrap justify-center'>
+        <section className='flex gap-4 flex-wrap justify-center max-w-xs'>
+          {
+          universities.map(({ University }) =>
+            <div key={University.id} className='bg-yellow-400 p-4 rounded text-center'>
+              {University.name}
+            </div>
+          )
+        }
+        </section>
+      <img alt="Estudiantes en un salón" className='w-80' src="/home.svg"/>
       </main>
       <Footer/>
   </>
