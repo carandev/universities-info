@@ -4,8 +4,8 @@ from models.career import Career
 
 from models.university import University
 
-UPB_URL = "https://www.upb.edu.co/es"
-CAREERS_UPB_URL = f"{UPB_URL}/pregrados"
+UPB_URL = "https://www.upb.edu.co"
+CAREERS_UPB_URL = f"{UPB_URL}/es/pregrados"
 
 
 def get_UPB_data():
@@ -21,7 +21,7 @@ def get_UPB_data():
 
         careers.append(Career(
             name=career_name,
-            page_url=f'{CAREERS_UPB_URL}{career_url}'
+            page_url=f'{UPB_URL}{career_url}'
         ))
 
     return University(
