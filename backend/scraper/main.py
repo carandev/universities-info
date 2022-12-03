@@ -12,9 +12,9 @@ from scraper.uts_data import get_UTS_data
 def careers_to_db():
     with Session(db_engine) as session:
         session.execute("SET FOREIGN_KEY_CHECKS=0")
-        session.execute("DROP TABLE universities")
-        session.execute("DROP TABLE careers")
-        session.execute("DROP TABLE subjects")
+        session.execute("DROP TABLE IF EXISTS universities")
+        session.execute("DROP TABLE IF EXISTS careers")
+        session.execute("DROP TABLE IF EXISTS subjects")
         session.execute("SET FOREIGN_KEY_CHECKS=1")
 
         Base.metadata.create_all(db_engine)
